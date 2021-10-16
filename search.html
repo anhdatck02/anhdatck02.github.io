@@ -1,0 +1,111 @@
+<div>
+	<div class="search">
+		<input id="txtSearch" type="text" />
+		<button id="btnSearch">Tìm kiếm</button>
+	</div>	
+	</div>
+	<table id="result">
+        <thead>
+            <tr>
+                <th width="50px">Mã</th>
+                <th width="200px">Nhà sản xuất</th>
+				<th width="200px">Tên sản phẩm</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+	let txtSearch = document.getElementById("txtSearch");
+	let btnSearch = document.getElementById("btnSearch");
+	let tblResult = document.getElementById('result');
+	let data = getData();
+	txtSearch.addEventListener("keyup", function(event) {
+	  if (event.keyCode === 13) {
+		search();
+	  }
+	});
+	btnSearch.addEventListener("click", search);
+	
+	function search(){
+		let result = findAll(txtSearch.value);
+		let tableBody = tblResult.querySelector('tbody');
+		tableBody.innerHTML = '';
+		if(!result) {
+			return;
+		}
+		for(let i = 0; i < result.length; i++){
+			let tr = document.createElement("tr");
+			createCell(tr, result[i].id, "50px");
+			createCell(tr, result[i].factory, "200px");
+			createCell(tr, result[i].name, "200px");
+			tableBody.appendChild(tr);
+		}
+	}
+	
+	function createCell(row, cellValue, width){
+		let td = document.createElement("td");
+		td.style.width = width;
+		let textnode = document.createTextNode(cellValue);
+		td.appendChild(textnode);
+		row.appendChild(td);
+	}
+
+	function findAll(value){
+		if(!value) return data;
+		let result = [];
+		value = value ? value.trim().toLowerCase() : value;
+		for(let i = 0; i < data.length; i++){
+			if(data[i].factory.trim().toLowerCase().indexOf(value) >= 0
+				|| data[i].name.trim().toLowerCase().indexOf(value) >= 0){
+				result.push(data[i]); 
+			}
+		}
+		return result;
+	};
+	
+	function getData() {
+		return [
+		  {
+			"id": 1,
+			"factory": "Samsung",
+			"name": "Samsung Note 20"
+		  },
+		  {
+			"id": 2,
+			"factory": "Samsung",
+			"name": "Samsung Z Flip"
+		  },
+		  {
+			"id": 3,
+			"factory": "Apple",
+			"name": "iphone 13"
+		  },
+		  {
+			"id": 4,
+			"factory": "Apple",
+			"name": "iphone 13 Pro"
+		  },
+		  {
+			"id": 5,
+			"factory": "Apple",
+			"name": "iphone 13 Pro Max"
+		  }
+		];
+	}
+
+</script>
+
+<style>
+	#result {
+		margin-top: 20px;
+		border: 1px solid grey;
+	}	
+	
+	table tr th {
+		text-align: left;
+	}
+</style>
